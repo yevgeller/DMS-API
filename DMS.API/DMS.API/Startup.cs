@@ -1,3 +1,6 @@
+using Azure.Core;
+using Azure.Identity;
+using Azure.Security.KeyVault.Secrets;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.HttpsPolicy;
@@ -16,6 +19,8 @@ namespace DMS.API
 {
     public class Startup
     {
+        //private string _key;
+
         public Startup(IConfiguration configuration)
         {
             Configuration = configuration;
@@ -25,8 +30,7 @@ namespace DMS.API
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
-        {
-
+        {            
             services.AddControllers();
             services.AddSwaggerGen(c =>
             {
@@ -49,6 +53,22 @@ namespace DMS.API
             app.UseRouting();
 
             app.UseAuthorization();
+
+        //    SecretClientOptions options = new SecretClientOptions()
+        //    {
+        //        Retry =
+        //{
+        //    Delay= TimeSpan.FromSeconds(2),
+        //    MaxDelay = TimeSpan.FromSeconds(16),
+        //    MaxRetries = 5,
+        //    Mode = RetryMode.Exponential
+        // }
+        //    };
+        //    var client = new SecretClient(new Uri("https://<vault-name>.vault.azure.net/"), new DefaultAzureCredential(), options);
+
+        //    KeyVaultSecret secret = client.GetSecret("dbconn");
+
+        //    string secretValue = secret.Value;
 
             app.UseEndpoints(endpoints =>
             {
