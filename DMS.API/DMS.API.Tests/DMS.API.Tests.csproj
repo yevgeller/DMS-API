@@ -19,6 +19,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\DMS.API.Data\DMS.API.Data.csproj" />
     <ProjectReference Include="..\DMS.API\DMS.API.csproj" />
   </ItemGroup>
 

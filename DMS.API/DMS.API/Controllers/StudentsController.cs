@@ -42,27 +42,18 @@ namespace DMS.API.Controllers
 
         [HttpGet]
         [Route("GetStudentById")]
-        public Student GetStudentById(int id)
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public ActionResult<Student> GetStudentById(int id)
         {
             var student = studentDAL.GetStudentById(id);
 
             if (student == null)
             {
-                throw new Exception("No such student");
+                return new NotFoundObjectResult("No such student");
             }
 
             return student;
-            // Get the connectionStrings section.
-            //Configuration.GetConnectionString("db");
-
-
-            //string cs = WebConfigurationManager.ConnectionStrings["db"].ConnectionString;
-
-            //if (cs == null)
-            //    throw new Exception("Could not locate DB connection string");
-
-            //return cs;
-            //return new Student();
         }
     }
 }

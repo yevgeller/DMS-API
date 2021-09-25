@@ -1,23 +1,24 @@
 using DMS.API.Controllers;
+using DMS.API.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DMS.API.Tests
 {
     [TestClass]
     public class StudentControllerTests
     {
-
         StudentsController sc;
         private static IConfiguration config;
-        //public TestContext TestContext { get; set; }
 
         [ClassInitialize()]
         public static void ClassInit(TestContext context)
         {
             config = TestHelper.GetIConfigurationRoot(context.TestDir);
             var connStr = config["db:connstr"];
-            
         }
 
         [TestInitialize()]
@@ -29,12 +30,27 @@ namespace DMS.API.Tests
 
 
         [TestMethod]
-        public void TestMethod1()
+        public void GetAll_AssureThereAreAny()
         {
+            IEnumerable<Student> students = sc.GetAll();
+            Assert.IsTrue(students.ToList().Any());
+        }
 
-            Assert.IsTrue(true);
+        [TestMethod]
+        public void GetByInvalidId_Return404()
+        {
+            ActionResult<Student> student = sc.GetStudentById(-1);
+            var res = student.Result as NotFoundObjectResult;
+            Assert.IsTrue(res.StatusCode == 404);
+        }
 
-
+        [TestMethod]
+        public void GetByValidId_ReturnStudent()
+        {
+            int studentId = 5;
+            ActionResult<Student> student = sc.GetStudentById(studentId);
+            var res = student.Value;
+            Assert.IsTrue(res.Student_Id == studentId);
         }
     }
 }
