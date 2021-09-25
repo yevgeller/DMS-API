@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
+using DMS.API.Data;
 
 namespace DMS.API.Controllers
 {
@@ -18,11 +19,13 @@ namespace DMS.API.Controllers
     {
         private readonly object _key;
         private readonly string _key2;
+        StudentDAL studentDAL;
 
         public StudentsController(IConfiguration config)
         {
             _key = config["db:connstr"];
             _key2 = config.GetConnectionString("db");
+            studentDAL = new StudentDAL(config);
         }
 
         [HttpGet]
@@ -31,9 +34,9 @@ namespace DMS.API.Controllers
         {
             return new List<Student>
             {
-                new Student{Student_Id = 1, First_Name="John", Last_Name = "Jones"},
-                new Student{Student_Id=2, First_Name = "Mary", Last_Name = "Jones"},
-                new Student{Student_Id =3, First_Name="Kelly", Last_Name="Michaels"}
+                new Student{Student_Id = 1, Name ="John Jones", BirthDate=new DateTime(2015, 1, 10)},
+                new Student{Student_Id=2, Name = "Mary Jones", BirthDate = new DateTime(2015,1,20)},
+                new Student{Student_Id =3, Name ="Kelly Michaels", BirthDate=new DateTime(2015, 1, 30)}
             };
         }
 
@@ -41,8 +44,14 @@ namespace DMS.API.Controllers
         [Route("GetStudentById")]
         public Student GetStudentById(int id)
         {
-            return new Student { Student_Id = 0, First_Name = _key2.Substring(0, 5), Last_Name = _key2.Substring(5, 5) };
+            var student = studentDAL.GetStudentById(id);
 
+            if (student == null)
+            {
+                throw new Exception("No such student");
+            }
+
+            return student;
             // Get the connectionStrings section.
             //Configuration.GetConnectionString("db");
 
