@@ -61,7 +61,7 @@ namespace DMS.API.Controllers
 
         [HttpGet]
         [Route("GetAllStudents2")]
-        public async Task<IEnumerable<Student>> GetAllViaDapper()
+        public async Task<IEnumerable<Student>> GetAllViaDapperAsync()
         {
             var result = await studentRepo.GetAll();
             return result;
@@ -71,7 +71,7 @@ namespace DMS.API.Controllers
         [Route("GetStudentById2")]
         [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
         [ProducesResponseType(StatusCodes.Status404NotFound)]
-        public async Task<ActionResult<Student>> GetStudentByIdViaDapper(int id)
+        public async Task<ActionResult<Student>> GetStudentByIdViaDapperAsync(int id)
         {
             var student = await studentRepo.GetStudentById(id);
 

@@ -19,7 +19,6 @@ namespace DMS.API.Data.Repository
             ctx = _ctx;
         }
 
-
         public async Task<IEnumerable<Student>> GetAll()
         {
             using (var conn = ctx.CreateConnection())

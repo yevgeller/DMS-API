@@ -1,10 +1,13 @@
 using DMS.API.Controllers;
+using DMS.API.Data;
+using DMS.API.Data.Repository;
 using DMS.API.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Configuration;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 
 namespace DMS.API.Tests
 {
@@ -24,8 +27,7 @@ namespace DMS.API.Tests
         [TestInitialize()]
         public void InitTests()
         {
-            sc = new StudentsController(config, null);
-            var i = 1;
+            sc = new StudentsController(config, new StudentRepository(new DapperContext(config)));
         }
 
 
@@ -51,6 +53,30 @@ namespace DMS.API.Tests
             ActionResult<Student> student = sc.GetStudentById(studentId);
             var res = student.Value;
             Assert.IsTrue(res.Student_Id == studentId);
+        }
+
+        [TestMethod]
+        public async Task GetAllViaDapper_AssureThereAreAny()
+        {
+            var all = await sc.GetAllViaDapperAsync();
+            Assert.IsTrue(all.ToList().Any());
+        }
+
+        [TestMethod]
+        public async Task GetByIdViaDapper_ReturnStudent()
+        {
+            int studentId = 5;
+            ActionResult<Student> student = await sc.GetStudentByIdViaDapperAsync(5);
+            var res = student.Value;
+            Assert.IsTrue(res.Student_Id == studentId);
+        }
+
+        [TestMethod]
+        public async Task GetByInvalidIdViaDapper_Return404()
+        {
+            ActionResult<Student> student = await sc.GetStudentByIdViaDapperAsync(-1);
+            var res = student.Result as NotFoundObjectResult;
+            Assert.IsTrue(res.StatusCode == 404);
         }
     }
 }
