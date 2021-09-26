@@ -10,6 +10,7 @@ using Dapper;
 using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using DMS.API.Data;
+using DMS.API.Data.Contracts;
 
 namespace DMS.API.Controllers
 {
@@ -20,12 +21,14 @@ namespace DMS.API.Controllers
         private readonly object _key;
         private readonly string _key2;
         StudentDAL studentDAL;
+        private readonly IStudentRepository studentRepo;
 
-        public StudentsController(IConfiguration config)
+        public StudentsController(IConfiguration config, IStudentRepository _studentRepo)
         {
             _key = config["db:connstr"];
             _key2 = config.GetConnectionString("db");
             studentDAL = new StudentDAL(config);
+            studentRepo = _studentRepo;
         }
 
         [HttpGet]
@@ -47,6 +50,30 @@ namespace DMS.API.Controllers
         public ActionResult<Student> GetStudentById(int id)
         {
             var student = studentDAL.GetStudentById(id);
+
+            if (student == null)
+            {
+                return new NotFoundObjectResult("No such student");
+            }
+
+            return student;
+        }
+
+        [HttpGet]
+        [Route("GetAllStudents2")]
+        public async Task<IEnumerable<Student>> GetAllViaDapper()
+        {
+            var result = await studentRepo.GetAll();
+            return result;
+        }
+
+        [HttpGet]
+        [Route("GetStudentById2")]
+        [ProducesResponseType(StatusCodes.Status200OK, Type = typeof(Student))]
+        [ProducesResponseType(StatusCodes.Status404NotFound)]
+        public async Task<ActionResult<Student>> GetStudentByIdViaDapper(int id)
+        {
+            var student = await studentRepo.GetStudentById(id);
 
             if (student == null)
             {

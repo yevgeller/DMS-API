@@ -19,7 +19,7 @@ namespace DMS.API.Data
             _configuration = configuration;
             string connFromSecrets = _configuration["db:connstr"];
             string connFromAppPool = _configuration.GetConnectionString("db");
-            _connectionString = _configuration.GetConnectionString(connFromSecrets ?? connFromAppPool);
+            _connectionString = connFromSecrets ?? connFromAppPool;
         }
         public IDbConnection CreateConnection()
             => new SqlConnection(_connectionString);

@@ -24,7 +24,7 @@ namespace DMS.API.Tests
         [TestInitialize()]
         public void InitTests()
         {
-            sc = new StudentsController(config);
+            sc = new StudentsController(config, null);
             var i = 1;
         }
 

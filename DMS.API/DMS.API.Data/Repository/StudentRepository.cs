@@ -24,14 +24,14 @@ namespace DMS.API.Data.Repository
         {
             using (var conn = ctx.CreateConnection())
             {
-                var students = await conn.QueryAsync<Student>("SELECT * FROM Students");
+                var students = await conn.QueryAsync<Student>("SELECT * FROM Student");
                 return students.ToList();
             }
         }
 
         public async Task<Student> GetStudentById(int id)
         {
-            var query = "SELECT * FROM Students WHERE Student_Id = @Student_Id";
+            var query = "SELECT * FROM Student WHERE Student_Id = @Student_Id";
 
             using(var conn = ctx.CreateConnection())
             {
