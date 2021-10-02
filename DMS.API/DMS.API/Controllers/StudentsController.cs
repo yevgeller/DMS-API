@@ -11,6 +11,7 @@ using Microsoft.Extensions.Configuration;
 using System.Configuration;
 using DMS.API.Data;
 using DMS.API.Data.Contracts;
+using DMS.API.Data.Models;
 
 namespace DMS.API.Controllers
 {
@@ -82,5 +83,7 @@ namespace DMS.API.Controllers
 
             return student;
         }
+
+        
     }
 }
